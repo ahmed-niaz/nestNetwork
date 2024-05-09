@@ -1,7 +1,11 @@
+import Carousel from "../components/Carousel";
+import TabCategories from "../components/TabCategories";
+
 const Home = () => {
   return (
     <main>
-      <h2>Nest Network</h2>
+      <Carousel />
+      <TabCategories />
     </main>
   );
 };
