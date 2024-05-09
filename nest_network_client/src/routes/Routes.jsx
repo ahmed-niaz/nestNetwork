@@ -1,15 +1,16 @@
 import { createBrowserRouter } from "react-router-dom";
 import Root from "../layout/Root";
-import NotFound from "../pages/NotFound";
 import Home from "../pages/Home";
 import Login from "../pages/authentication/Login";
 import Register from "../pages/authentication/Register";
 import JobDetails from "../pages/JobDetails";
+import AddJob from "../pages/AddJob";
+import ErrorPage from "../pages/ErrorPage";
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
-    errorElement: <NotFound />,
+    errorElement: <ErrorPage/>,
     children: [
       {
         index: true,
@@ -28,6 +29,10 @@ export const router = createBrowserRouter([
         element: <JobDetails />,
         loader: ({params})=>fetch(`${import.meta.env.VITE_API_URL}/job/${params.id}`)
       },
+      {
+        path:'/add-job',
+        element:<AddJob/>
+      }
     ],
   },
 ]);

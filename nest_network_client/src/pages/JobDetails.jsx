@@ -3,6 +3,8 @@ import useAuth from "../hooks/useAuth";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useState } from "react";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const JobDetails = () => {
   const { user } = useAuth();
@@ -23,10 +25,12 @@ const JobDetails = () => {
   } = job || {};
 
   const handleSubmission = async (e) => {
+    if(user?.email === buyer_email) return toast.error(`Action not permitted`)
     e.preventDefault();
     const form = e.target;
     const jobId = _id;
     const price = parseFloat(form.price.value);
+    if(price<=parseFloat(min_price)) return toast.error(`Offer more or at least equal to minimum price`);
     const email = form.email.value;
     const comment = form.comment.value;
     const deadline = startDate;
@@ -43,7 +47,19 @@ const JobDetails = () => {
       job_title,
       category,
     };
-    console.table(bidData);
+    // console.table(bidData);
+
+
+    // post data to the db using server
+    try {
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_API_URL}/bid`,
+        bidData
+      );
+      console.log(data);
+    } catch (err) {
+      console.log(err);
+    }
   };
   return (
     <div className="flex flex-col md:flex-row justify-around gap-5  items-center min-h-[calc(100vh-306px)] md:max-w-screen-xl mx-auto ">
