@@ -15,7 +15,6 @@ const AddJob = () => {
     e.preventDefault();
     const form = e.target;
 
-
     const job_title = form.job_title.value;
     const email = form.email.value;
     const deadline = startDate;
@@ -34,11 +33,11 @@ const AddJob = () => {
       job_title,
       max_price,
       min_price,
-      buyer:{
+      buyer: {
         email,
-        name:user?.displayName,
-        photo:user?.photoURL,
-      }
+        name: user?.displayName,
+        photo: user?.photoURL,
+      },
     };
     console.table(jobData);
 
@@ -49,8 +48,8 @@ const AddJob = () => {
         jobData
       );
       console.log(data);
-      toast.success(`Job data Updated Successfully`)
-      navigate('/my-posted-job')
+      toast.success(`Job data Updated Successfully`);
+      navigate("/my-posted-job");
     } catch (err) {
       console.log(err);
     }
