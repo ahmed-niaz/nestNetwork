@@ -91,6 +91,34 @@ async function run() {
       const result = await jobCollection.updateOne(query,updateDoc,options);
       res.send(result)
     })
+
+    // get all bids using email from the db
+    app.get('/bids/:email',async(req,res)=>{
+      const email = req.params.email;
+      const query = {email}
+      const result = await bidCollection.find(query).toArray()
+      res.send(result)
+    })
+
+    // get all bid req from the owner
+    app.get('/bid-requests/:email',async(req,res)=>{
+      const email = req.params.email;
+      const query = {'buyer.email':email}
+      const result = await bidCollection.find(query).toArray()
+      res.send(result)
+    })
+
+    // update status
+    app.patch('/update-status/:id',async(req,res)=>{
+      const id = req.params.id;
+      const status = req.body;
+      const query = {_id:new ObjectId(id)}
+      const updateDoc = {
+        $set:status,
+      }
+      const result = await bidCollection.updateOne(query,updateDoc)
+      res.send(result)
+    })
     // Send a ping to confirm a successful connection
     // await client.db("admin").command({ ping: 1 });
     console.log(

@@ -3,11 +3,20 @@ import logo from "../../assets/logo/logo.jpeg";
 import login from "../../assets/background/login.jpg";
 import useAuth from "../../hooks/useAuth";
 import toast from "react-hot-toast";
+import { useEffect } from "react";
+
 
 const Login = () => {
-  const { signIn, signInWithGoogle } = useAuth();
+  const { signIn, signInWithGoogle,user ,loading} = useAuth();
   const navigate = useNavigate();
   const location = useLocation()
+  // if someone login then it redirect to the home page
+  useEffect(()=>{
+    if(user){
+      navigate('/')
+    }
+  },[navigate,user])
+
   const from = location.state || '/'
   //   google sign in
   const handleGoogleSignIn = async () => {
@@ -38,6 +47,8 @@ const Login = () => {
       toast.error(err?.message);
     }
   };
+
+  if(user || loading) return;
   return (
     <div className="flex justify-center items-center min-h-[calc(100vh-306px)] my-16">
       <div className="flex w-full max-w-sm mx-auto overflow-hidden bg-white rounded-lg shadow-lg  lg:max-w-4xl ">
