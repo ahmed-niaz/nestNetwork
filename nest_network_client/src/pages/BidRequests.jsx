@@ -17,14 +17,14 @@ const BidRequests = () => {
 
   //   handle Status
   const handleStatus = async (id, preStatus, status) => {
-    if(status=== preStatus) return
+    if (status === preStatus) return;
     console.log(id, preStatus, status);
     const { data } = await axios.patch(
       `${import.meta.env.VITE_API_URL}/update-status/${id}`,
       { status }
     );
     console.log(data);
-    getData()
+    getData();
   };
   return (
     <section className="container px-4 mx-auto pt-12">
