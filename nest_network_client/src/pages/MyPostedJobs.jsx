@@ -1,29 +1,26 @@
 import { useEffect, useState } from "react";
 import useAuth from "../hooks/useAuth";
-import axios from "axios";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
+import useAxiosSecure from "../hooks/useAxiosSecure";
 
 const MyPostedJobs = () => {
   const { user } = useAuth();
+  const axiosSecure = useAxiosSecure();
   const [jobs, setJobs] = useState([]);
   useEffect(() => {
     getData();
   }, [user]);
 
   const getData = async () => {
-    const { data } = await axios.get(
-      `${import.meta.env.VITE_API_URL}/jobs/${user?.email}`,{withCredentials:true}
-    );
+    const { data } = await axiosSecure(`/jobs/${user?.email}`);
     setJobs(data);
   };
   //   console.log(jobs);
 
   const handleDelete = async (id) => {
     try {
-      const { data } = await axios.delete(
-        `${import.meta.env.VITE_API_URL}/job/${id}`
-      );
+      const { data } = await axiosSecure.delete(`/job/${id}`);
       console.log(data);
       toast.success(`Delete Successful`);
       //   refresh ui
@@ -101,7 +98,7 @@ const MyPostedJobs = () => {
                       </td>
 
                       <td className="px-4 py-4 text-sm text-gray-500  whitespace-nowrap">
-                      {new Date(job.deadline).toLocaleDateString()}
+                        {new Date(job.deadline).toLocaleDateString()}
                       </td>
 
                       <td className="px-4 py-4 text-sm text-gray-500  whitespace-nowrap">
@@ -110,7 +107,16 @@ const MyPostedJobs = () => {
                       <td className="px-4 py-4 text-sm whitespace-nowrap">
                         <div className="flex items-center gap-x-2">
                           <p
-                            className={`px-3 py-1 rounded-full ${job.category === 'Web Development' && ' text-blue-500 bg-blue-100/60'} ${job.category === 'Digital Marketing' && ' text-rose-500 bg-green-100/60'} ${job.category === 'Graphics Design' && ' text-blue-500 bg-rose-100/60'}
+                            className={`px-3 py-1 rounded-full ${
+                              job.category === "Web Development" &&
+                              " text-blue-500 bg-blue-100/60"
+                            } ${
+                              job.category === "Digital Marketing" &&
+                              " text-rose-500 bg-green-100/60"
+                            } ${
+                              job.category === "Graphics Design" &&
+                              " text-blue-500 bg-rose-100/60"
+                            }
                             text-xs`}
                           >
                             {job.category}
@@ -121,7 +127,7 @@ const MyPostedJobs = () => {
                         title={job.description}
                         className="px-4 py-4 text-sm text-gray-500  whitespace-nowrap"
                       >
-                       {job.description.substring(0, 50)}...
+                        {job.description.substring(0, 50)}...
                       </td>
                       <td className="px-4 py-4 text-sm whitespace-nowrap">
                         <div className="flex items-center gap-x-6">
@@ -146,7 +152,10 @@ const MyPostedJobs = () => {
                             </svg>
                           </button>
                           {/* Edit BTN */}
-                          <Link to={`/update/${job._id}`} className="text-gray-500 transition-colors duration-200   hover:text-yellow-500 focus:outline-none">
+                          <Link
+                            to={`/update/${job._id}`}
+                            className="text-gray-500 transition-colors duration-200   hover:text-yellow-500 focus:outline-none"
+                          >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               fill="none"

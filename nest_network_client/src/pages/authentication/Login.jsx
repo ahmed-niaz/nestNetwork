@@ -21,9 +21,10 @@ const Login = () => {
   //   google sign in
   const handleGoogleSignIn = async () => {
     try {
+      // 1.google sign in from firebase
       const result = await signInWithGoogle();
       console.log(result);
-      // set cookie
+      // set cookie[2.get token from server using email]
       const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/jwt`, {
         email: result?.user?.email,
       },{withCredentials:true});
