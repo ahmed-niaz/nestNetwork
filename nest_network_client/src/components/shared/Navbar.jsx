@@ -6,10 +6,10 @@ const Navbar = () => {
   return (
     <div className="navbar container px-4 mx-auto">
       <div className="flex-1">
-        <div className="flex gap-2 items-center">
+        <Link to='/' className="flex gap-2 items-center">
           <img className="w-auto h-7" src={logo} alt="" />
           <span className="font-bold">NestNetwork</span>
-        </div>
+        </Link>
       </div>
       <div className="flex-none">
         <ul className="menu menu-horizontal px-1">

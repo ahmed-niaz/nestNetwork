@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import register from "../../assets/background/register.jpg";
 import logo from "../../assets/logo/logo.jpeg";
 import useAuth from "../../hooks/useAuth";
@@ -7,13 +7,15 @@ const Register = () => {
   const { user, setUser, createUser, signInWithGoogle, updateUserProfile } =
     useAuth();
   const navigate = useNavigate();
+  const location = useLocation()
+  const from = location.state || '/'
 
   //   google sign in
   const handleGoogleSignIn = async () => {
     try {
       await signInWithGoogle();
       toast.success("Successfully Sign in🚀");
-      navigate("/");
+      navigate(from,{replace:true});
     } catch (err) {
       console.log(err);
       toast.error(err?.message);
@@ -33,7 +35,7 @@ const Register = () => {
       console.log(result);
       await updateUserProfile(name, photo);
       setUser({ ...user, photoURL: photo, displayName: name });
-      navigate("/");
+      navigate(from,{replace:true});
       toast.success("Successfully Sign in🚀");
     } catch (err) {
       console.log(err);
