@@ -4,26 +4,32 @@ import login from "../../assets/background/login.jpg";
 import useAuth from "../../hooks/useAuth";
 import toast from "react-hot-toast";
 import { useEffect } from "react";
-
+import axios from "axios";
 
 const Login = () => {
-  const { signIn, signInWithGoogle,user ,loading} = useAuth();
+  const { signIn, signInWithGoogle, user, loading } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation()
+  const location = useLocation();
   // if someone login then it redirect to the home page
-  useEffect(()=>{
-    if(user){
-      navigate('/')
+  useEffect(() => {
+    if (user) {
+      navigate("/");
     }
-  },[navigate,user])
+  }, [navigate, user]);
 
-  const from = location.state || '/'
+  const from = location.state || "/";
   //   google sign in
   const handleGoogleSignIn = async () => {
     try {
-      await signInWithGoogle();
+      const result = await signInWithGoogle();
+      console.log(result);
+      // set cookie
+      const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/jwt`, {
+        email: result?.user?.email,
+      },{withCredentials:true});
+      console.log(data);
       toast.success("Successfully Sign in🚀");
-      navigate(from,{replace:true});
+      navigate(from, { replace: true });
     } catch (err) {
       console.log(err);
       toast.error(err?.message);
@@ -38,17 +44,22 @@ const Login = () => {
     const password = form.password.value;
 
     try {
-      const result = await signIn(email, password)
+      const result = await signIn(email, password);
       console.log(result);
+      // set cookie
+      const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/jwt`, {
+        email: result?.user?.email,
+      },{withCredentials:true});
+      console.log(data);
       toast.success("Successfully Sign in🚀");
-      navigate(from,{replace:true});
+      navigate(from, { replace: true });
     } catch (err) {
       console.log(err);
       toast.error(err?.message);
     }
   };
 
-  if(user || loading) return;
+  if (user || loading) return;
   return (
     <div className="flex justify-center items-center min-h-[calc(100vh-306px)] my-16">
       <div className="flex w-full max-w-sm mx-auto overflow-hidden bg-white rounded-lg shadow-lg  lg:max-w-4xl ">

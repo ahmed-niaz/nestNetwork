@@ -10,6 +10,7 @@ import {
   updateProfile,
 } from "firebase/auth";
 import auth from "../services/firebase.config";
+import axios from "axios";
 
 export const AuthContext = createContext(null);
 const googleProvider = new GoogleAuthProvider();
@@ -32,11 +33,15 @@ const FirebaseProvider = ({ children }) => {
     setLoading(true);
     return signInWithPopup(auth, googleProvider);
   };
-
   const logOut = async () => {
-    setLoading(true);
-    return signOut(auth);
-  };
+    setLoading(true)
+    // 
+    const { data } = await axios(`${import.meta.env.VITE_API_URL}/logout`, {
+      withCredentials: true,
+    })
+    console.log(data)
+    return signOut(auth)
+  }
 
   const updateUserProfile = (name, photo) => {
     return updateProfile(auth.currentUser, {

@@ -4,6 +4,7 @@ import logo from "../../assets/logo/logo.jpeg";
 import useAuth from "../../hooks/useAuth";
 import toast from "react-hot-toast";
 import { useEffect } from "react";
+import axios from "axios";
 const Register = () => {
   const { user, setUser, createUser, signInWithGoogle, updateUserProfile,loading } =
     useAuth();
@@ -20,7 +21,11 @@ const Register = () => {
   //   google sign in
   const handleGoogleSignIn = async () => {
     try {
-      await signInWithGoogle();
+    const result =   await signInWithGoogle();
+    const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/jwt`, {
+      email: result?.user?.email,
+    },{withCredentials:true});
+    console.log(data);
       toast.success("Successfully Sign in🚀");
       navigate(from,{replace:true});
     } catch (err) {
@@ -41,7 +46,13 @@ const Register = () => {
       const result = await createUser(email, password);
       console.log(result);
       await updateUserProfile(name, photo);
-      setUser({ ...user, photoURL: photo, displayName: name });
+      // optimistic update
+      setUser({ ...result, photoURL: photo, displayName: name });
+      // set cookie 
+      const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/jwt`, {
+        email: result?.user?.email,
+      },{withCredentials:true});
+      console.log(data);
       navigate(from,{replace:true});
       toast.success("Successfully Sign in🚀");
     } catch (err) {
